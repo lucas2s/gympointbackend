@@ -21,7 +21,7 @@ module.exports = {
         allowNull: false,
       },
       peso: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         allowNull: false,
       },
       altura: {
