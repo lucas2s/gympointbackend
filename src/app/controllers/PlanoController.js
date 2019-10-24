@@ -13,7 +13,7 @@ class PlanoController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { id, title, duration, price} = await Plano.create(req.body);
+    const { id, title, duration, price } = await Plano.create(req.body);
 
     return res.json({
       id,
@@ -25,30 +25,59 @@ class PlanoController {
 
   async update(req, res) {
     const schema = Yup.object().shape({
-        title: Yup.string(),
-        duration: Yup.number(),
-        price: Yup.number(),
+      title: Yup.string(),
+      duration: Yup.number(),
+      price: Yup.number(),
     });
 
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { id } = req.params;
+    const { id } = req.body;
 
-    const Plano = await Plano.findByPk(id);
+    const plano = await Plano.findByPk(id);
 
-    if (!Plano) {
+    if (!plano) {
       return res.status(400).json({ error: 'Id Plano is not valid' });
     }
 
-    const { id, title, duration, price } = await Plano.update(req.body);
+    const { title, duration, price } = await plano.update(req.body);
 
     return res.json({
-        id,
-        title,
-        duration,
-        price,
+      id,
+      title,
+      duration,
+      price,
+    });
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+
+    const plano = await Plano.findByPk(id);
+
+    if (!plano) {
+      return res.status(400).json({ error: 'Id Plano is not valid' });
+    }
+
+    const { title, duration, price } = plano;
+
+    await plano.destroy();
+
+    return res.json({
+      id,
+      title,
+      duration,
+      price,
+    });
+  }
+
+  async index(req, res) {
+    const planos = await Plano.findAll();
+
+    return res.json({
+      planos,
     });
   }
 }
