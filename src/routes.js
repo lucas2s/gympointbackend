@@ -3,6 +3,7 @@ import SessionController from './app/controllers/SessionController';
 import authMiddleware from './app/middlewares/auth';
 import PlanoController from './app/controllers/PlanoController';
 import StudentController from './app/controllers/StudentController';
+import MatriculaController from './app/controllers/MatriculaController';
 
 const routes = new Router();
 
@@ -17,4 +18,10 @@ routes.put('/planos', PlanoController.update);
 routes.get('/planos', PlanoController.index);
 routes.delete('/planos/:id', PlanoController.delete);
 
+routes.post('/matriculas', MatriculaController.store);
+/*
+routes.put('/planos', PlanoController.update);
+routes.get('/planos', PlanoController.index);
+routes.delete('/planos/:id', PlanoController.delete);
+*/
 export default routes;
