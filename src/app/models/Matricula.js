@@ -17,8 +17,11 @@ class Matricula extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Student, { foreignKey: 'student_id' });
-    this.belongsTo(models.Plano, { foreignKey: 'plano_id' });
+    this.belongsTo(models.Student, {
+      foreignKey: 'student_id',
+      as: 'student',
+    });
+    this.belongsTo(models.Plano, { foreignKey: 'plan_id', as: 'plan' });
   }
 }
 
