@@ -19,9 +19,8 @@ routes.get('/planos', PlanoController.index);
 routes.delete('/planos/:id', PlanoController.delete);
 
 routes.post('/matriculas', MatriculaController.store);
-/*
-routes.put('/planos', PlanoController.update);
-routes.get('/planos', PlanoController.index);
-routes.delete('/planos/:id', PlanoController.delete);
-*/
+routes.put('/matriculas', MatriculaController.update);
+routes.get('/matriculas', MatriculaController.index);
+routes.delete('/matriculas/:id', MatriculaController.delete);
+
 export default routes;
