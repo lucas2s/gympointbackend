@@ -20,7 +20,8 @@ routes.delete('/planos/:id', PlanoController.delete);
 
 routes.post('/matriculas', MatriculaController.store);
 routes.put('/matriculas', MatriculaController.update);
-routes.get('/matriculas', MatriculaController.index);
 routes.delete('/matriculas/:id', MatriculaController.delete);
+routes.get('/matriculas', MatriculaController.index);
+routes.get('/matriculas/:id', MatriculaController.indexByPk);
 
 export default routes;

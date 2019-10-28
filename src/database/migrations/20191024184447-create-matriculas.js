@@ -27,13 +27,16 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      end_date : {
+      end_date: {
         type: Sequelize.DATE,
         allowNull: false,
       },
       price: {
         type: Sequelize.DOUBLE,
         allowNull: false,
+      },
+      canceled_at: {
+        type: Sequelize.DATE,
       },
       created_at: {
         type: Sequelize.DATE,

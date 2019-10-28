@@ -7,6 +7,7 @@ class Matricula extends Model {
         start_date: Sequelize.DATE,
         end_date: Sequelize.DATE,
         price: Sequelize.DOUBLE,
+        canceled_at: Sequelize.DATE,
       },
       {
         sequelize,
