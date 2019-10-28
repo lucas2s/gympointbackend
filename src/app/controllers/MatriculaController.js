@@ -7,10 +7,13 @@ import {
   isBefore,
   toDate,
 } from 'date-fns';
+
 import { Op } from 'sequelize';
 import Matricula from '../models/Matricula';
 import Plano from '../models/Plano';
 import Student from '../models/Student';
+import CreateMatriculaMail from '../jobs/CreateMatriculaMail';
+import Queue from '../../lib/Queue';
 
 class MatriculaController {
   async store(req, res) {
@@ -68,6 +71,12 @@ class MatriculaController {
       start_date: dateStart,
       end_date,
       price,
+    });
+
+    await Queue.add(CreateMatriculaMail.key, {
+      matricula,
+      plano,
+      student,
     });
 
     return res.json({
