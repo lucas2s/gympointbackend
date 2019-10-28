@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
-import Plano from '../models/Plano';
+import Plan from '../models/Plan';
 
-class PlanoController {
+class PlanController {
   async store(req, res) {
     const schema = Yup.object().shape({
       title: Yup.string().required(),
@@ -13,7 +13,7 @@ class PlanoController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { id, title, duration, price } = await Plano.create(req.body);
+    const { id, title, duration, price } = await Plan.create(req.body);
 
     return res.json({
       id,
@@ -36,13 +36,13 @@ class PlanoController {
 
     const { id } = req.body;
 
-    const plano = await Plano.findByPk(id);
+    const plan = await Plan.findByPk(id);
 
-    if (!plano) {
-      return res.status(400).json({ error: 'Id Plano is not valid' });
+    if (!plan) {
+      return res.status(400).json({ error: 'Id Plan is not valid' });
     }
 
-    const { title, duration, price } = await plano.update(req.body);
+    const { title, duration, price } = await plan.update(req.body);
 
     return res.json({
       id,
@@ -55,15 +55,15 @@ class PlanoController {
   async delete(req, res) {
     const { id } = req.params;
 
-    const plano = await Plano.findByPk(id);
+    const plan = await Plan.findByPk(id);
 
-    if (!plano) {
-      return res.status(400).json({ error: 'Id Plano is not valid' });
+    if (!plan) {
+      return res.status(400).json({ error: 'Id Plan is not valid' });
     }
 
-    const { title, duration, price } = plano;
+    const { title, duration, price } = plan;
 
-    await plano.destroy();
+    await plan.destroy();
 
     return res.json({
       id,
@@ -74,12 +74,12 @@ class PlanoController {
   }
 
   async index(req, res) {
-    const planos = await Plano.findAll();
+    const plans = await Plan.findAll();
 
     return res.json({
-      planos,
+      plans,
     });
   }
 }
 
-export default new PlanoController();
+export default new PlanController();

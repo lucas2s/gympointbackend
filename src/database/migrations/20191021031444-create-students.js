@@ -16,8 +16,8 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
-      idade: {
-        type: Sequelize.INTEGER,
+      birth_date: {
+        type: Sequelize.DATE,
         allowNull: false,
       },
       peso: {

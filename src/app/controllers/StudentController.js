@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { startOfDay, parseISO } from 'date-fns';
 import Student from '../models/Student';
 
 class StudentController {
@@ -8,7 +9,7 @@ class StudentController {
       email: Yup.string()
         .email()
         .required(),
-      idade: Yup.number().required(),
+      birth_date: Yup.date().required(),
       peso: Yup.number().required(),
       altura: Yup.number().required(),
     });
@@ -25,14 +26,20 @@ class StudentController {
       return res.status(400).json({ error: 'Student already exists.' });
     }
 
-    const { id, name, email, idade, peso, altura } = await Student.create(
+    const { birth_date } = req.body;
+    const birthDate = startOfDay(parseISO(birth_date));
+
+    req.body.birth_date = birthDate;
+
+    const { id, email, name, idade, peso, altura } = await Student.create(
       req.body
     );
 
     return res.json({
       id,
-      name,
       email,
+      name,
+      birth_date,
       idade,
       peso,
       altura,
@@ -43,7 +50,7 @@ class StudentController {
     const schema = Yup.object().shape({
       name: Yup.string(),
       email: Yup.string().email(),
-      idade: Yup.number(),
+      birth_date: Yup.date(),
       peso: Yup.number(),
       altura: Yup.number(),
     });

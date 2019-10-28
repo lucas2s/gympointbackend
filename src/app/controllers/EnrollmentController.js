@@ -9,13 +9,13 @@ import {
 } from 'date-fns';
 
 import { Op } from 'sequelize';
-import Matricula from '../models/Matricula';
-import Plano from '../models/Plano';
+import Enrollment from '../models/Enrollment';
+import Plan from '../models/Plan';
 import Student from '../models/Student';
-import CreateMatriculaMail from '../jobs/CreateMatriculaMail';
+import CreateEnrollmentMail from '../jobs/CreateEnrollmentMail';
 import Queue from '../../lib/Queue';
 
-class MatriculaController {
+class EnrollmentController {
   async store(req, res) {
     const schema = Yup.object().shape({
       student_id: Yup.number().required(),
@@ -35,17 +35,17 @@ class MatriculaController {
       return res.status(400).json({ error: 'Id Student is not valid' });
     }
 
-    const plano = await Plano.findByPk(plan_id);
+    const plan = await Plan.findByPk(plan_id);
 
-    if (!plano) {
-      return res.status(400).json({ error: 'Id Plano is not valid' });
+    if (!plan) {
+      return res.status(400).json({ error: 'Id Plan is not valid' });
     }
 
     const dateStart = startOfDay(parseISO(start_date));
     if (isBefore(dateStart, startOfDay(new Date()))) {
       return res.status(400).json({ error: 'Past dates are not permitted' });
     }
-    const checkMatricula = await Matricula.findOne({
+    const checkEnrollment = await Enrollment.findOne({
       where: {
         student_id,
         canceled_at: null,
@@ -55,17 +55,17 @@ class MatriculaController {
       },
     });
 
-    if (checkMatricula) {
+    if (checkEnrollment) {
       return res
         .status(400)
         .json({ error: 'There is registration for the chosen period' });
     }
 
-    let end_date = addMonths(dateStart, plano.duration);
+    let end_date = addMonths(dateStart, plan.duration);
     end_date = endOfDay(end_date);
-    const price = plano.duration * plano.price;
+    const price = plan.duration * plan.price;
 
-    const matricula = await Matricula.create({
+    const enrollment = await Enrollment.create({
       student_id,
       plan_id,
       start_date: dateStart,
@@ -73,14 +73,14 @@ class MatriculaController {
       price,
     });
 
-    await Queue.add(CreateMatriculaMail.key, {
-      matricula,
-      plano,
+    await Queue.add(CreateEnrollmentMail.key, {
+      enrollment,
+      plan,
       student,
     });
 
     return res.json({
-      matricula,
+      enrollment,
     });
   }
 
@@ -97,18 +97,18 @@ class MatriculaController {
 
     const { id, student_id, plan_id, start_date } = req.body;
 
-    const matricula = await Matricula.findByPk(id);
+    const enrollment = await Enrollment.findByPk(id);
 
-    if (!matricula) {
-      return res.status(400).json({ error: 'Id Matricula is not valid' });
+    if (!enrollment) {
+      return res.status(400).json({ error: 'Id Enrollment is not valid' });
     }
 
-    if (matricula.canceled_at) {
-      return res.status(400).json({ error: 'Matricula is canceled' });
+    if (enrollment.canceled_at) {
+      return res.status(400).json({ error: 'Enrollment is canceled' });
     }
 
-    if (matricula.start_date < new Date()) {
-      return res.status(400).json({ error: 'Matricula in period of term' });
+    if (enrollment.start_date < new Date()) {
+      return res.status(400).json({ error: 'Enrollment in period of term' });
     }
 
     if (student_id) {
@@ -117,7 +117,7 @@ class MatriculaController {
       if (!student) {
         return res.status(400).json({ error: 'Id Student is not valid' });
       }
-      matricula.student_id = student_id;
+      enrollment.student_id = student_id;
     }
 
     let dateStart;
@@ -126,85 +126,85 @@ class MatriculaController {
       if (isBefore(dateStart, startOfDay(new Date()))) {
         return res.status(400).json({ error: 'Past dates are not permitted' });
       }
-      matricula.start_date = dateStart;
+      enrollment.start_date = dateStart;
     } else {
-      dateStart = matricula.start_date;
+      dateStart = enrollment.start_date;
     }
 
-    let plano;
+    let plan;
     if (plan_id) {
-      plano = await Plano.findByPk(plan_id);
+      plan = await Plan.findByPk(plan_id);
 
-      if (!plano) {
-        return res.status(400).json({ error: 'Id Plano is not valid' });
+      if (!plan) {
+        return res.status(400).json({ error: 'Id Plan is not valid' });
       }
-      matricula.plan_id = plan_id;
+      enrollment.plan_id = plan_id;
     } else {
-      plano = await Plano.findByPk(matricula.plan_id);
+      plan = await Plan.findByPk(enrollment.plan_id);
     }
 
     if (plan_id || start_date) {
-      let end_date = addMonths(dateStart, plano.duration);
+      let end_date = addMonths(dateStart, plan.duration);
       end_date = endOfDay(end_date);
-      const price = plano.duration * plano.price;
-      matricula.end_date = end_date;
-      matricula.price = price;
+      const price = plan.duration * plan.price;
+      enrollment.end_date = end_date;
+      enrollment.price = price;
     }
 
-    await matricula.save();
+    await enrollment.save();
 
     return res.json({
-      matricula,
+      enrollment,
     });
   }
 
   async delete(req, res) {
     const { id } = req.params;
 
-    const matricula = await Matricula.findByPk(id);
+    const enrollment = await Enrollment.findByPk(id);
 
-    if (!matricula) {
-      return res.status(400).json({ error: 'Id Matricula is not valid' });
+    if (!enrollment) {
+      return res.status(400).json({ error: 'Id Enrollment is not valid' });
     }
 
-    if (matricula.canceled_at) {
-      return res.status(400).json({ error: 'Matricula is canceled' });
+    if (enrollment.canceled_at) {
+      return res.status(400).json({ error: 'Enrollment is canceled' });
     }
 
-    matricula.canceled_at = new Date();
+    enrollment.canceled_at = new Date();
 
-    await matricula.save();
+    await enrollment.save();
 
     return res.json({
-      matricula,
+      enrollment,
     });
   }
 
   async index(req, res) {
-    const matricula = await Matricula.findAll();
+    const enrollments = await Enrollment.findAll();
 
-    if (!matricula) {
-      return res.status(400).json({ error: 'Does not exist Matriculas' });
+    if (!enrollments) {
+      return res.status(400).json({ error: 'Does not exist Enrollments' });
     }
 
     return res.json({
-      matricula,
+      enrollments,
     });
   }
 
   async indexByPk(req, res) {
     const { id } = req.params;
 
-    const matricula = await Matricula.findByPk(id);
+    const enrollment = await Enrollment.findByPk(id);
 
-    if (!matricula) {
-      return res.status(400).json({ error: 'Does not exist Matriculas' });
+    if (!enrollment) {
+      return res.status(400).json({ error: 'Does not exist Enrollments' });
     }
 
     return res.json({
-      matricula,
+      enrollment,
     });
   }
 }
 
-export default new MatriculaController();
+export default new EnrollmentController();

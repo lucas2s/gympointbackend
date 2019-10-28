@@ -2,39 +2,39 @@ import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
 import Mail from '../../lib/Mail';
 
-class CreateMatriculaMail {
+class CreateEnrollmentMail {
   get key() {
-    return 'CreateMatriculaMail';
+    return 'CreateEnrollmentMail';
   }
 
   async handle({ data }) {
-    const { matricula, plano, student } = data;
+    const { enrollment, plan, student } = data;
 
     await Mail.sendMail({
       to: `${student.name} <${student.email}>`,
-      subject: 'Matricula Realizada com Sucesso',
-      template: 'createMatricula',
+      subject: 'Enrollment Realizada com Sucesso',
+      template: 'createEnrollment',
       context: {
-        studente: student.name,
-        plano: plano.title,
+        student: student.name,
+        plan: plan.title,
         start_date: format(
-          parseISO(matricula.start_date),
+          parseISO(enrollment.start_date),
           "'Dia' dd 'de' MMMM 'de' yyyy '.'",
           {
             locale: pt,
           }
         ),
         end_date: format(
-          parseISO(matricula.end_date),
+          parseISO(enrollment.end_date),
           "'Dia' dd 'de' MMMM 'de' yyyy '.'",
           {
             locale: pt,
           }
         ),
-        price: matricula.price,
+        price: enrollment.price,
       },
     });
   }
 }
 
-export default new CreateMatriculaMail();
+export default new CreateEnrollmentMail();
