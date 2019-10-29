@@ -191,7 +191,7 @@ class EnrollmentController {
         {
           model: Student,
           as: 'student',
-          attributes: ['name', 'email'],
+          attributes: ['id', 'name', 'email'],
         },
         {
           model: Plan,
@@ -230,7 +230,7 @@ class EnrollmentController {
     });
 
     if (!enrollment) {
-      return res.status(400).json({ error: 'Does not exist Enrollments' });
+      return res.status(400).json({ error: 'Enrollment does not exist' });
     }
 
     return res.json({
