@@ -3,6 +3,7 @@ import { subDays, toDate, startOfDay, endOfDay } from 'date-fns';
 
 import Checkin from '../models/Checkin';
 import Student from '../models/Student';
+import Enrollment from '../models/Enrollment';
 
 class CheckinController {
   async store(req, res) {
@@ -16,6 +17,21 @@ class CheckinController {
 
     const date = endOfDay(subDays(new Date(), 7));
     const day = new Date();
+
+    const enrollment = await Enrollment.findOne({
+      where: {
+        student_id: id,
+        canceled_at: null,
+        start_date: {
+          [Op.lte]: toDate(day),
+        },
+      },
+    });
+
+    if (!enrollment) {
+      return res.status(400)
+      .json({ error: 'There is no active enrollment for this student.' });
+    }    
 
     const contCheckins = await Checkin.count({
       where: {
