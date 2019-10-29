@@ -8,9 +8,9 @@ class Student extends Model {
         name: Sequelize.STRING,
         email: Sequelize.STRING,
         birth_date: Sequelize.DATE,
-        peso: Sequelize.FLOAT,
-        altura: Sequelize.FLOAT,
-        idade: {
+        weight: Sequelize.FLOAT,
+        height: Sequelize.FLOAT,
+        age: {
           type: Sequelize.VIRTUAL,
           get() {
             return differenceInYears(new Date(), this.birth_date);

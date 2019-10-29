@@ -20,11 +20,11 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      peso: {
+      weight: {
         type: Sequelize.FLOAT,
         allowNull: false,
       },
-      altura: {
+      height: {
         type: Sequelize.FLOAT,
         allowNull: false,
       },

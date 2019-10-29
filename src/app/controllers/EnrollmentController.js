@@ -181,10 +181,28 @@ class EnrollmentController {
   }
 
   async index(req, res) {
-    const enrollments = await Enrollment.findAll();
+    const { page = 1 } = req.query;
+
+    const enrollments = await Enrollment.findAll({
+      attributes: ['id', 'start_date', 'end_date', 'price', 'canceled_at'],
+      limit: 20,
+      offset: (page - 1) * 20,
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['name', 'email'],
+        },
+        {
+          model: Plan,
+          as: 'plan',
+          attributes: ['title', 'duration'],
+        },
+      ],
+    });
 
     if (!enrollments) {
-      return res.status(400).json({ error: 'Does not exist Enrollments' });
+      return res.status(400).json({ error: 'There are no Enrollments' });
     }
 
     return res.json({
@@ -195,7 +213,21 @@ class EnrollmentController {
   async indexByPk(req, res) {
     const { id } = req.params;
 
-    const enrollment = await Enrollment.findByPk(id);
+    const enrollment = await Enrollment.findByPk(id, {
+      attributes: ['id', 'start_date', 'end_date', 'price', 'canceled_at'],
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['name', 'email'],
+        },
+        {
+          model: Plan,
+          as: 'plan',
+          attributes: ['title', 'duration'],
+        },
+      ],
+    });
 
     if (!enrollment) {
       return res.status(400).json({ error: 'Does not exist Enrollments' });

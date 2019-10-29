@@ -34,7 +34,7 @@ class PlanController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { id } = req.body;
+    const { id } = req.params;
 
     const plan = await Plan.findByPk(id);
 
@@ -76,8 +76,25 @@ class PlanController {
   async index(req, res) {
     const plans = await Plan.findAll();
 
+    if (!plans) {
+      return res.status(400).json({ error: 'There are no plans' });
+    }
+
     return res.json({
       plans,
+    });
+  }
+
+  async indexByPk(req, res) {
+    const { id } = req.params;
+    const plan = await Plan.findByPk(id);
+
+    if (!plan) {
+      return res.status(400).json({ error: 'Id Plan is not valid' });
+    }
+
+    return res.json({
+      plan,
     });
   }
 }

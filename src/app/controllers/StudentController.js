@@ -10,8 +10,8 @@ class StudentController {
         .email()
         .required(),
       birth_date: Yup.date().required(),
-      peso: Yup.number().required(),
-      altura: Yup.number().required(),
+      weight: Yup.number().required(),
+      height: Yup.number().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -31,7 +31,7 @@ class StudentController {
 
     req.body.birth_date = birthDate;
 
-    const { id, email, name, idade, peso, altura } = await Student.create(
+    const { id, email, name, age, weight, height } = await Student.create(
       req.body
     );
 
@@ -40,9 +40,9 @@ class StudentController {
       email,
       name,
       birth_date,
-      idade,
-      peso,
-      altura,
+      age,
+      weight,
+      height,
     });
   }
 
@@ -51,15 +51,15 @@ class StudentController {
       name: Yup.string(),
       email: Yup.string().email(),
       birth_date: Yup.date(),
-      peso: Yup.number(),
-      altura: Yup.number(),
+      weight: Yup.number(),
+      height: Yup.number(),
     });
 
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { id, email } = req.body;
+    const { id } = req.params;
 
     const student = await Student.findByPk(id);
 
@@ -67,23 +67,27 @@ class StudentController {
       return res.status(400).json({ error: 'Id student is not valid' });
     }
 
-    if (email !== student.email) {
-      const studentExists = await Student.findOne({ where: { email } });
+    const { email } = req.body;
 
-      if (studentExists) {
-        return res.status(400).json({ error: 'Student already exists.' });
+    if (email) {
+      if (email !== student.email) {
+        const studentExists = await Student.findOne({ where: { email } });
+
+        if (studentExists) {
+          return res.status(400).json({ error: 'Student already exists.' });
+        }
       }
     }
 
-    const { name, idade, peso, altura } = await student.update(req.body);
+    const { name, age, weight, height } = await student.update(req.body);
 
     return res.json({
       id,
       name,
       email,
-      idade,
-      peso,
-      altura,
+      age,
+      weight,
+      height,
     });
   }
 }
