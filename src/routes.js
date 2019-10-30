@@ -5,12 +5,15 @@ import PlanController from './app/controllers/PlanController';
 import StudentController from './app/controllers/StudentController';
 import EnrollmentController from './app/controllers/EnrollmentController';
 import CheckinController from './app/controllers/CheckinController';
+import QuestionController from './app/controllers/QuestionController';
 
 const routes = new Router();
 
 routes.post('/sessions', SessionController.store);
 routes.post('/students/:id/checkins', CheckinController.store);
 routes.get('/students/:id/checkins', CheckinController.index);
+routes.post('/students/:id/help-orders', QuestionController.store);
+routes.get('/students/:id/help-orders', QuestionController.index);
 
 routes.use(authMiddleware);
 routes.post('/students', StudentController.store);

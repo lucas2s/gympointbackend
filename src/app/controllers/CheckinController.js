@@ -29,9 +29,10 @@ class CheckinController {
     });
 
     if (!enrollment) {
-      return res.status(400)
-      .json({ error: 'There is no active enrollment for this student.' });
-    }    
+      return res
+        .status(400)
+        .json({ error: 'There is no active enrollment for this student.' });
+    }
 
     const contCheckins = await Checkin.count({
       where: {
