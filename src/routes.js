@@ -6,6 +6,7 @@ import StudentController from './app/controllers/StudentController';
 import EnrollmentController from './app/controllers/EnrollmentController';
 import CheckinController from './app/controllers/CheckinController';
 import QuestionController from './app/controllers/QuestionController';
+import AnswerController from './app/controllers/AnswerController';
 
 const routes = new Router();
 
@@ -30,5 +31,7 @@ routes.put('/enrollments', EnrollmentController.update);
 routes.delete('/enrollments/:id', EnrollmentController.delete);
 routes.get('/enrollments', EnrollmentController.index);
 routes.get('/enrollments/:id', EnrollmentController.indexByPk);
+routes.post('/help-orders/:id/answer', AnswerController.store);
+routes.get('/help-orders/answer', AnswerController.index);
 
 export default routes;
