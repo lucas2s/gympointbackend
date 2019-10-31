@@ -22,6 +22,36 @@ class QuestionController {
   }
 
   async index(req, res) {
+    const { page = 1 } = req.query;
+
+    const helpOrders = await HelpOrder.findAll({
+      where: { answer: null, answer_at: null },
+      attributes: ['id', 'question', 'created_at'],
+      limit: 20,
+      offset: (page - 1) * 20,
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: [
+            'id',
+            'name',
+            'email',
+            'birth_date',
+            'age',
+            'height',
+            'weight',
+          ],
+        },
+      ],
+    });
+
+    return res.json({
+      helpOrders,
+    });
+  }
+
+  async indexByStudent(req, res) {
     const { id } = req.params;
     const { page = 1 } = req.query;
 
