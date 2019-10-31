@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import HelpOrder from '../models/HelpOrder';
 import Student from '../models/Student';
 
@@ -35,8 +36,11 @@ class AnswerController {
     const { page = 1 } = req.query;
 
     const helpOrders = await HelpOrder.findAll({
-      where: { answer: null, answer_at: null },
-      attributes: ['id', 'question', 'created_at'],
+      where: {
+        answer: { [Op.ne]: null },
+        answer_at: { [Op.ne]: null },
+      },
+      attributes: ['id', 'question', 'answer', 'answer_at'],
       limit: 20,
       offset: (page - 1) * 20,
       include: [
