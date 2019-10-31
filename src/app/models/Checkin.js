@@ -1,5 +1,4 @@
-import Sequelize, { Model } from 'sequelize';
-import { startOfDay, toDate } from 'date-fns';
+import { Model } from 'sequelize';
 
 class Checkin extends Model {
   static init(sequelize) {
