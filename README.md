@@ -21,29 +21,26 @@ Desafio para aplicar os conceitos e tecnologias aprendidos durante o treinamento
   - Redis - Banco de dados NoSQL
   - bcryptjs - Criptografia
   - bee-queue - Criação de serviços na aplicação com o uso de Redis
-  - cors
+  - cors - Acesso e segurança das APIs da aplicação
   - date-fns - Manipulação de datas
   - dotenv - Variaveis de ambiente
   - express - Desenvolvimento de Apis
-  - express-handlebars
   - jsonwebtoken - Autenticação JWT
   - nodemailer - Enviao de e-mails
-  - nodemailer-express-handlebars - Layout de emails
-  - pg
-  - pg-hstore
+  - express-handlebars - Desenvolvimento de Layout de emails
+  - nodemailer-express-handlebars - Desenvolvimento de Layout de emails
+  - pg - Para utilização do banco de dados postgress
+  - pg-hstore - Para utilização do banco de dados postgress
   - sequelize - Mapeamento Objeto Relacional
   - yup - Validação de dados.
-  - eslint
-  - eslint-config-airbnb-base
-  - eslint-config-prettier
-  - eslint-plugin-import
-  - eslint-plugin-prettier
-  - nodemon
-  - prettier
-  - sequelize-cli
-  - sucrase
+  - eslint - Padronização de código
+  - nodemon - Statrt e restart automatico da aplicação durante o desenvolvimento.
+  - prettier - Formatador de código
+  - sucrase - Utilização do padrão de sintaxe ES6
+  - sentry - Tratamento de exceções de produção
+  - youch - Tratamento das mensagens para o  ambiente de desenvolvimento e produção
 
 ### Funcionalidades do desenvolvidas
-	- Criação de sessão para o Administrador
+  - Criação de sessão para o Administrador
 	- Inclusão de students
 	- Atualização de students
