@@ -54,6 +54,3 @@ Projeto iniciado no Desafio 2 e finalizado no Desafio 3.
   - Apis para para os administradores consultarem e responderem o pedido de ajuda dos alunos.
   - Fila de e-mail para o envio das respostas aos alunos da academia.
   
-### Detalhamento das funcionalidades estão descritas no enunciado dos desafios abaixo:
-- Desafio 2 - https://github.com/Rocketseat/bootcamp-gostack-desafio-02
-- Desafio 3 - https://github.com/Rocketseat/bootcamp-gostack-desafio-03
