@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 import { startOfDay, parseISO } from 'date-fns';
 import Student from '../models/Student';
 
@@ -88,6 +89,28 @@ class StudentController {
       age,
       weight,
       height,
+    });
+  }
+
+  async index(req, res) {
+    const { student, page = 1 } = req.query;
+
+    const students = await Student.findAll({
+      limit: 20,
+      offset: (page - 1) * 20,
+      where: {
+        name: {
+          [Op.iLike]: `%${student}%`,
+        },
+      },
+    });
+
+    if (!students.length) {
+      return res.status(400).json({ error: 'There are no students' });
+    }
+
+    return res.json({
+      students,
     });
   }
 }

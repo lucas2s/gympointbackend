@@ -184,7 +184,7 @@ class EnrollmentController {
     const { page = 1 } = req.query;
 
     const enrollments = await Enrollment.findAll({
-      attributes: ['id', 'start_date', 'end_date', 'price', 'canceled_at'],
+      attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
       limit: 20,
       offset: (page - 1) * 20,
       include: [
