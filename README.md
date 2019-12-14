@@ -15,6 +15,7 @@ Bootcamp 9.0 da Rocketseat - Desafio 3: Gympoint, continuando a aplicação
 
 Desenvolver o Backend em NODEJS da aplicação Gympoint. 
 Desafio para aplicar os conceitos e tecnologias aprendidos durante o treinamento de NODEJS.
+Projeto iniciado no Desafio 2 e finalizado no Desafio 3.
 
 ## Tecnologias APIs e Bibliotecas utilizadas
   - postgres - Banco de Dados Relacional
@@ -41,6 +42,15 @@ Desafio para aplicar os conceitos e tecnologias aprendidos durante o treinamento
   - youch - Tratamento das mensagens para o  ambiente de desenvolvimento e produção
 
 ### Funcionalidades do desenvolvidas
-  - Criação de sessão para o Administrador
-	- Inclusão de students
-	- Atualização de students
+  - Api para sessão de administrador da aplicação com JWT.
+  - Middleware de autenticação de administrador.
+  - Apis para criação, atualização alunos na academia.
+  - Apis para CRUD de planos ofertados pela academia.
+  - Api para realização de checkin de alunos matriculados na academia.
+  - Api para consulta dos checkins realizados pelos alunos matriculados na academia.
+  - Apis para CRUD de matriculas dos alunos na academia. 
+  - Fila para envio de e-mails para os alunos matriculados.
+  - Apis para os alunos criarem e consultarem solicitação de ajuda para os administradores da academia.
+  - Apis para para os administradores consultarem e responderem o pedido de ajuda dos alunos.
+  - Fila de e-mail para o envio das respostas aos alunos da academia.
+  
