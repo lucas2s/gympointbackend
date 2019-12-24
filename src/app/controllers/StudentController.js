@@ -96,8 +96,8 @@ class StudentController {
     const { student, page = 1 } = req.query;
 
     const students = await Student.findAll({
-      limit: 20,
-      offset: (page - 1) * 20,
+      limit: 10,
+      offset: (page - 1) * 10,
       where: {
         name: {
           [Op.iLike]: `%${student}%`,
@@ -112,6 +112,26 @@ class StudentController {
     return res.json({
       students,
     });
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+
+    const student = await Student.findByPk(id);
+
+    if (!student) {
+      return res.status(400).json({ error: 'Id student is not valid' });
+    }
+
+    try {
+      await Student.destroy({
+        where: { id },
+      });
+    } catch (err) {
+      return res.status(400).json({ Message: 'Unable to Delete is Student' });
+    }
+
+    return res.json({ Message: 'Student is Deleted' });
   }
 }
 
