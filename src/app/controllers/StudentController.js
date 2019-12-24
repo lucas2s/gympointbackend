@@ -114,6 +114,20 @@ class StudentController {
     });
   }
 
+  async indexById(req, res) {
+    const { id } = req.params;
+
+    const student = await Student.findByPk(id);
+
+    if (!student) {
+      return res.status(400).json({ error: 'Id student is not valid' });
+    }
+
+    return res.json({
+      student,
+    });
+  }
+
   async delete(req, res) {
     const { id } = req.params;
 
