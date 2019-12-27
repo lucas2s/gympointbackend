@@ -103,6 +103,7 @@ class StudentController {
           [Op.iLike]: `%${student}%`,
         },
       },
+      order: ['name'],
     });
 
     if (!students.length) {
