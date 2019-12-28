@@ -74,7 +74,13 @@ class PlanController {
   }
 
   async index(req, res) {
-    const plans = await Plan.findAll();
+    const { page = 1 } = req.query;
+
+    const plans = await Plan.findAll({
+      limit: 10,
+      offset: (page - 1) * 10,
+      order: ['title'],
+    });
 
     if (!plans) {
       return res.status(400).json({ error: 'There are no plans' });
