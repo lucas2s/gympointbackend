@@ -21,6 +21,12 @@ class Enrollment extends Model {
             );
           },
         },
+        canceled: {
+          type: Sequelize.VIRTUAL(Sequelize.BOOLEAN, ['canceled_at']),
+          get() {
+            return isBefore(this.get('canceled_at'), new Date());
+          },
+        },
       },
       {
         sequelize,

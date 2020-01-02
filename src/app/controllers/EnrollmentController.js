@@ -86,16 +86,17 @@ class EnrollmentController {
 
   async update(req, res) {
     const schema = Yup.object().shape({
-      student_id: Yup.number(),
       plan_id: Yup.number(),
       start_date: Yup.date(),
     });
+
+    const { id } = req.params;
 
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { id, student_id, plan_id, start_date } = req.body;
+    const { student_id, plan_id, start_date } = req.body;
 
     const enrollment = await Enrollment.findByPk(id);
 
@@ -184,7 +185,18 @@ class EnrollmentController {
     const { page = 1 } = req.query;
 
     const enrollments = await Enrollment.findAll({
-      attributes: ['id', 'start_date', 'end_date', 'price', 'active'],
+      where: {
+        canceled_at: null,
+      },
+      order: ['start_date'],
+      attributes: [
+        'id',
+        'start_date',
+        'end_date',
+        'canceled_at',
+        'price',
+        'active',
+      ],
       limit: 20,
       offset: (page - 1) * 20,
       include: [
@@ -219,12 +231,12 @@ class EnrollmentController {
         {
           model: Student,
           as: 'student',
-          attributes: ['id', 'name', 'email'],
+          attributes: ['id', 'name'],
         },
         {
           model: Plan,
           as: 'plan',
-          attributes: ['id', 'title', 'duration'],
+          attributes: ['id', 'title', 'duration', 'price'],
         },
       ],
     });

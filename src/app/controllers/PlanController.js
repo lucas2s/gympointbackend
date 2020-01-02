@@ -99,8 +99,13 @@ class PlanController {
       return res.status(400).json({ error: 'Id Plan is not valid' });
     }
 
+    const { title, duration, price } = plan;
+
     return res.json({
-      plan,
+      id,
+      title,
+      duration,
+      price,
     });
   }
 }

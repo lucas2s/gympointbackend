@@ -30,7 +30,7 @@ routes.get('/plans', PlanController.index);
 routes.get('/plans/:id', PlanController.indexByPk);
 
 routes.post('/enrollments', EnrollmentController.store);
-routes.put('/enrollments', EnrollmentController.update);
+routes.put('/enrollments/:id', EnrollmentController.update);
 routes.delete('/enrollments/:id', EnrollmentController.delete);
 routes.get('/enrollments', EnrollmentController.index);
 routes.get('/enrollments/:id', EnrollmentController.indexByPk);
