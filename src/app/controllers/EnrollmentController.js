@@ -8,6 +8,8 @@ import {
   toDate,
 } from 'date-fns';
 
+import { zonedTimeToUtc } from 'date-fns-tz';
+
 import { Op } from 'sequelize';
 import Enrollment from '../models/Enrollment';
 import Plan from '../models/Plan';
@@ -15,19 +17,21 @@ import Student from '../models/Student';
 import CreateEnrollmentMail from '../jobs/CreateEnrollmentMail';
 import Queue from '../../lib/Queue';
 
+const timeSP = 'America/Sao_Paulo';
+
 class EnrollmentController {
   async store(req, res) {
     const schema = Yup.object().shape({
       student_id: Yup.number().required(),
       plan_id: Yup.number().required(),
-      start_date: Yup.date().required(),
+      startDate: Yup.date().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { student_id, plan_id, start_date } = req.body;
+    const { student_id, plan_id, startDate } = req.body;
 
     const student = await Student.findByPk(student_id);
 
@@ -40,17 +44,19 @@ class EnrollmentController {
     if (!plan) {
       return res.status(400).json({ error: 'Id Plan is not valid' });
     }
+    
+    const start_date = zonedTimeToUtc(parseISO(startDate),timeSP);
 
-    const dateStart = startOfDay(parseISO(start_date));
-    if (isBefore(dateStart, startOfDay(new Date()))) {
+    if (isBefore(start_date, startOfDay(new Date()))) {
       return res.status(400).json({ error: 'Past dates are not permitted' });
     }
+
     const checkEnrollment = await Enrollment.findOne({
       where: {
         student_id,
         canceled_at: null,
         end_date: {
-          [Op.gte]: toDate(dateStart),
+          [Op.gte]: toDate(start_date),
         },
       },
     });
@@ -61,14 +67,13 @@ class EnrollmentController {
         .json({ error: 'There is registration for the chosen period' });
     }
 
-    let end_date = addMonths(dateStart, plan.duration);
-    end_date = endOfDay(end_date);
+    const end_date = endOfDay(addMonths(start_date, plan.duration));
     const price = plan.duration * plan.price;
 
     const enrollment = await Enrollment.create({
       student_id,
       plan_id,
-      start_date: dateStart,
+      start_date,
       end_date,
       price,
     });
@@ -87,7 +92,7 @@ class EnrollmentController {
   async update(req, res) {
     const schema = Yup.object().shape({
       plan_id: Yup.number(),
-      start_date: Yup.date(),
+      startDate: Yup.date(),
     });
 
     const { id } = req.params;
@@ -96,7 +101,7 @@ class EnrollmentController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { student_id, plan_id, start_date } = req.body;
+    const { student_id, plan_id, startDate } = req.body;
 
     const enrollment = await Enrollment.findByPk(id);
 
@@ -112,50 +117,36 @@ class EnrollmentController {
       return res.status(400).json({ error: 'Enrollment in period of term' });
     }
 
-    if (student_id) {
-      const student = await Student.findByPk(student_id);
-
-      if (!student) {
-        return res.status(400).json({ error: 'Id Student is not valid' });
-      }
-      enrollment.student_id = student_id;
+    const student = await Student.findByPk(student_id ? student_id : enrollment.student_id);
+    if (!student) {
+      return res.status(400).json({ error: 'Id Student is not valid' });
     }
+    enrollment.student_id = student.id;
+    
 
-    let dateStart;
-    if (start_date) {
-      dateStart = startOfDay(parseISO(start_date));
-      if (isBefore(dateStart, startOfDay(new Date()))) {
-        return res.status(400).json({ error: 'Past dates are not permitted' });
-      }
-      enrollment.start_date = dateStart;
-    } else {
-      dateStart = enrollment.start_date;
+    const start_date = zonedTimeToUtc(parseISO(startDate ? startDate : enrollment.start_date),timeSP);
+    if (isBefore(start_date, startOfDay(new Date()))) {
+      return res.status(400).json({ error: 'Past dates are not permitted' });
     }
+    enrollment.start_date = start_date;
 
-    let plan;
-    if (plan_id) {
-      plan = await Plan.findByPk(plan_id);
-
-      if (!plan) {
-        return res.status(400).json({ error: 'Id Plan is not valid' });
-      }
-      enrollment.plan_id = plan_id;
-    } else {
-      plan = await Plan.findByPk(enrollment.plan_id);
+    const plan = await Plan.findByPk(plan_id ? plan_id : enrollment.plan_id);
+    if (!plan) {
+         res.status(400).json({ error: 'Id Plan is not valid' });
     }
+    enrollment.plan_id = plan.id;
 
     if (plan_id || start_date) {
-      let end_date = addMonths(dateStart, plan.duration);
-      end_date = endOfDay(end_date);
+      const end_date = endOfDay(addMonths(start_date, plan.duration));
       const price = plan.duration * plan.price;
       enrollment.end_date = end_date;
       enrollment.price = price;
     }
 
-    await enrollment.save();
+    const newEnrollment =await enrollment.save({enrollment});
 
     return res.json({
-      enrollment,
+      newEnrollment,
     });
   }
 
