@@ -27,21 +27,13 @@ class QuestionController {
     const helpOrders = await HelpOrder.findAll({
       where: { answer: null, answer_at: null },
       attributes: ['id', 'question', 'created_at'],
-      limit: 20,
-      offset: (page - 1) * 20,
+      limit: 10,
+      offset: (page - 1) * 10,
       include: [
         {
           model: Student,
           as: 'student',
-          attributes: [
-            'id',
-            'name',
-            'email',
-            'birth_date',
-            'age',
-            'height',
-            'weight',
-          ],
+          attributes: ['id', 'name', 'email'],
         },
       ],
     });
@@ -63,8 +55,8 @@ class QuestionController {
 
     const helpOrders = await HelpOrder.findAll({
       where: { student_id: id },
-      limit: 20,
-      offset: (page - 1) * 20,
+      limit: 10,
+      offset: (page - 1) * 10,
       include: [
         {
           model: Student,
