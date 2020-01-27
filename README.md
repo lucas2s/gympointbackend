@@ -100,6 +100,6 @@ O Projeto desenvolvido em NodeJS com aplicação de diversas tecnologias e bibli
 :heavy_check_mark: Executar o comando "yarn dev" em outro terminal iniciar o backend. <br />
 :heavy_check_mark: Realizar a configuração de um servidor de envio de e-mail. Para fins de testes recomendamos o uso da ferramenta https://mailtrap.io/ <br />
 :heavy_check_mark: Realizar a configuração do arquivo de variáveis globais ".env" e salvar na pasta raiz do projeto. O arquivo ".env.example" serve como exemplo para configuração. <br />
-:heavy_check_mark: Criar o frontend conforme indicado no repositório: https://github.com/lucasssartori/gympointbackend. <br />
+:heavy_check_mark: Criar o frontend conforme indicado no repositório: https://github.com/lucasssartori/gympointweb <br />
 
 :heavy_exclamation_mark: Obs: Deve-se ter instalado as aplicações yarn e docker.
