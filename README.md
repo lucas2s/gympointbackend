@@ -37,7 +37,7 @@
 
 Bootcamp 9.0 da Rocketseat - Desafio 3: Gympoint Backend
 
-Neste desafio foi desenvolvido um backend para uma aplicação para a administração de academias.
+Neste desafio foi desenvolvido um backend de uma aplicação para a administração de academias.
 
 A aplicação web que consome este backend está no seguinte repositório: https://github.com/lucasssartori/gympointweb
 
@@ -98,6 +98,8 @@ O Projeto desenvolvido em NodeJS com aplicação de diversas tecnologias e bibli
 :heavy_check_mark: Executar o comando "yarn sequelize db:seed:all" para criação de conteudos nas tabelas. <br />
 :heavy_check_mark: Executar o comando "yarn queue" em um terminal iniciar a fila de execuções. <br />
 :heavy_check_mark: Executar o comando "yarn dev" em outro terminal iniciar o backend. <br />
+:heavy_check_mark: Realizar a configuração de um servidor de envio de e-mail. Para fins de testes recomendamos o uso da ferramenta https://mailtrap.io/ <br />
+:heavy_check_mark: Realizar a configuração do arquivo de variáveis globais ".env" e salvar na pasta raiz do projeto. O arquivo ".env.example" serve como exemplo para configuração. <br />
 :heavy_check_mark: Criar o frontend conforme indicado no repositório: https://github.com/lucasssartori/gympointbackend. <br />
 
 :heavy_exclamation_mark: Obs: Deve-se ter instalado as aplicações yarn e docker.
