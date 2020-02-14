@@ -15,12 +15,12 @@ routes.post('/students/:id/checkins', CheckinController.store);
 routes.get('/students/:id/checkins', CheckinController.index);
 routes.post('/students/:id/help-orders', QuestionController.store);
 routes.get('/students/:id/help-orders', QuestionController.indexByStudent);
+routes.get('/students/:id', StudentController.indexById);
 
 routes.use(authMiddleware);
 routes.post('/students', StudentController.store);
 routes.put('/students/:id', StudentController.update);
 routes.get('/students', StudentController.index);
-routes.get('/students/:id', StudentController.indexById);
 routes.delete('/students/:id', StudentController.delete);
 
 routes.post('/plans', PlanController.store);
