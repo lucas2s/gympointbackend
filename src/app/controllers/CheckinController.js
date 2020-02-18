@@ -86,15 +86,9 @@ class CheckinController {
     const checkins = await Checkin.findAll({
       where: { student_id: id },
       attributes: ['id', 'created_at'],
+      order: ['created_at'],
       limit: 20,
       offset: (page - 1) * 20,
-      include: [
-        {
-          model: Student,
-          as: 'student',
-          attributes: ['id', 'name', 'email'],
-        },
-      ],
     });
 
     return res.json({
