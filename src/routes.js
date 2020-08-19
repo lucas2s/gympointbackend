@@ -3,7 +3,10 @@ import SessionController from './app/controllers/SessionController';
 import authMiddleware from './app/middlewares/auth';
 import PlanController from './app/controllers/PlanController';
 import StudentController from './app/controllers/StudentController';
+
 import EnrollmentController from './app/controllers/EnrollmentController';
+import EnrrollmentStoreValidator from './app/validators/EnrollmentStore';
+
 import CheckinController from './app/controllers/CheckinController';
 import QuestionController from './app/controllers/QuestionController';
 import AnswerController from './app/controllers/AnswerController';
@@ -29,7 +32,11 @@ routes.delete('/plans/:id', PlanController.delete);
 routes.get('/plans', PlanController.index);
 routes.get('/plans/:id', PlanController.indexByPk);
 
-routes.post('/enrollments', EnrollmentController.store);
+routes.post(
+  '/enrollments',
+  EnrrollmentStoreValidator,
+  EnrollmentController.store
+);
 routes.put('/enrollments/:id', EnrollmentController.update);
 routes.delete('/enrollments/:id', EnrollmentController.delete);
 routes.get('/enrollments', EnrollmentController.index);
