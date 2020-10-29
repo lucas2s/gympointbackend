@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import SessionController from './app/controllers/SessionController';
 import authMiddleware from './app/middlewares/auth';
 import PlanController from './app/controllers/PlanController';
@@ -11,9 +12,11 @@ import CheckinController from './app/controllers/CheckinController';
 import QuestionController from './app/controllers/QuestionController';
 import AnswerController from './app/controllers/AnswerController';
 
+import BruteForce from './lib/BruteForce';
+
 const routes = new Router();
 
-routes.post('/sessions', SessionController.store);
+routes.post('/sessions', BruteForce.prevent, SessionController.store);
 routes.post('/students/:id/checkins', CheckinController.store);
 routes.get('/students/:id/checkins', CheckinController.index);
 routes.post('/students/:id/help-orders', QuestionController.store);

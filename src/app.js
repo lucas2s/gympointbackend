@@ -1,6 +1,7 @@
 import 'dotenv/config';
 
 import cors from 'cors';
+import helmet from 'helmet';
 import express from 'express';
 import Youch from 'youch';
 import * as Sentry from '@sentry/node';
@@ -10,6 +11,8 @@ import routes from './routes';
 import sentryConfig from './config/sentry';
 
 import './database';
+
+import rateLimite from './lib/RateLimit';
 
 class App {
   constructor() {
@@ -23,8 +26,17 @@ class App {
 
   middlewares() {
     this.server.use(Sentry.Handlers.requestHandler());
-    this.server.use(cors());
+    this.server.use(helmet());
+    this.server.use(
+      cors({
+        origin: process.env.FRONT_URL,
+      })
+    );
     this.server.use(express.json());
+
+    if (process.env.NODE_ENV !== 'development') {
+      this.server.use(rateLimite);
+    }
   }
 
   routes() {
