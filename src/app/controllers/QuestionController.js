@@ -1,6 +1,8 @@
 import HelpOrder from '../models/HelpOrder';
 import Student from '../models/Student';
 
+import Cache from '../../lib/Cache';
+
 class QuestionController {
   async store(req, res) {
     const { id } = req.params;
@@ -16,9 +18,9 @@ class QuestionController {
       question: req.body.question,
     });
 
-    return res.json({
-      helpOrder,
-    });
+    await Cache.invalidatePrefix(`user:${id}`);
+
+    return res.json(helpOrder);
   }
 
   async index(req, res) {
@@ -38,14 +40,19 @@ class QuestionController {
       ],
     });
 
-    return res.json({
-      helpOrders,
-    });
+    return res.json(helpOrders);
   }
 
   async indexByStudent(req, res) {
     const { id } = req.params;
     const { page = 1 } = req.query;
+
+    const cacheKey = `user:${id}:questions:${page}`;
+    const cached = await Cache.get(cacheKey);
+
+    if (cached) {
+      return res.json(cached);
+    }
 
     const student = await Student.findByPk(id);
 
@@ -66,9 +73,9 @@ class QuestionController {
       ],
     });
 
-    return res.json({
-      helpOrders,
-    });
+    await Cache.set(cacheKey, helpOrders);
+
+    return res.json(helpOrders);
   }
 }
 

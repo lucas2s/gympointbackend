@@ -1,7 +1,9 @@
 import * as Yup from 'yup';
 import { Op } from 'sequelize';
 import { startOfDay, parseISO } from 'date-fns';
+
 import Student from '../models/Student';
+import Cache from '../../lib/Cache';
 
 class StudentController {
   async store(req, res) {
@@ -35,6 +37,8 @@ class StudentController {
     const { id, email, name, age, weight, height } = await Student.create(
       req.body
     );
+
+    await Cache.invalidatePrefix('students:page');
 
     return res.json({
       id,
@@ -82,6 +86,8 @@ class StudentController {
 
     const { name, age, weight, height } = await student.update(req.body);
 
+    await Cache.invalidatePrefix('students:page');
+
     return res.json({
       id,
       name,
@@ -94,6 +100,13 @@ class StudentController {
 
   async index(req, res) {
     const { student, page = 1 } = req.query;
+
+    const cacheKey = `students:page:${page}`;
+    const cached = await Cache.get(cacheKey);
+
+    if (cached) {
+      return res.json(cached);
+    }
 
     const students = await Student.findAll({
       limit: 10,
@@ -109,6 +122,8 @@ class StudentController {
     if (!students.length) {
       return res.status(400).json({ error: 'There are no students' });
     }
+
+    await Cache.set(cacheKey, students);
 
     return res.json({
       students,
@@ -145,6 +160,8 @@ class StudentController {
     } catch (err) {
       return res.status(400).json({ Message: 'Unable to Delete is Student' });
     }
+
+    await Cache.invalidatePrefix('students:page');
 
     return res.json({ Message: 'Student is Deleted' });
   }
